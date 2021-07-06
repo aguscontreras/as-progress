@@ -1,0 +1,145 @@
+<p-panel header="Agregar / Editar item">
+  <ng-template pTemplate="icons">
+    <p-button
+      icon="pi pi-times"
+      styleClass="p-button-secondary"
+      (click)="closePanel()"
+    >
+    </p-button>
+  </ng-template>
+
+  <form
+    class="p-fluid p-formgrid p-grid"
+    [formGroup]="formAddItem"
+    (ngSubmit)="addItem()"
+  >
+    <div class="p-field p-col-12 p-md-3 p-lg-2">
+      <label for="nombre">Nombre *</label>
+      <input type="text" id="nombre" pInputText formControlName="nombre" />
+    </div>
+
+    <div class="p-field p-col-12 p-md-3 p-lg-2">
+      <label for="tipo">Tipo *</label>
+      <p-dropdown
+        inputId="tipo"
+        [options]="dropTipoItem"
+        placeholder="Seleccione..."
+        formControlName="tipo"
+      ></p-dropdown>
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1
+      "
+    >
+      <label for="modulo">Módulo</label>
+      <p-dropdown
+        inputId="modulo"
+        [options]="dropModulo"
+        optionLabel="nombre"
+        optionValue="id"
+        formControlName="modulo"
+        placeholder="Seleccione..."
+      ></p-dropdown>
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1 &&
+        formAddItem.controls['tipo'].value !== 2
+      "
+    >
+      <label for="seccion">Sección</label>
+      <p-dropdown
+        inputId="seccion"
+        [options]="dropSecciones"
+        optionLabel="nombre"
+        optionValue="id"
+        formControlName="seccion"
+        placeholder="Seleccione..."
+      ></p-dropdown>
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1 &&
+        formAddItem.controls['tipo'].value !== 2 &&
+        formAddItem.controls['tipo'].value !== 3
+      "
+    >
+      <label for="pantalla">Pantalla</label>
+      <p-dropdown
+        inputId="pantalla"
+        [options]="dropPantallas"
+        optionLabel="nombre"
+        optionValue="id"
+        formControlName="pantalla"
+        placeholder="Seleccione..."
+      ></p-dropdown>
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1 &&
+        formAddItem.controls['tipo'].value !== 2 &&
+        formAddItem.controls['tipo'].value !== 5
+      "
+    >
+      <label for="componente">Componente Angular</label>
+      <input
+        type="text"
+        id="componente"
+        pInputText
+        formControlName="componente"
+      />
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1 &&
+        formAddItem.controls['tipo'].value !== 2 &&
+        formAddItem.controls['tipo'].value !== 5
+      "
+    >
+      <label for="nombreMxml">Nombre Mxml</label>
+      <input type="text" id="nombreMxml" pInputText formControlName="mxml" />
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value !== 1 &&
+        formAddItem.controls['tipo'].value !== 2
+      "
+    >
+      <label for="estado">Estado</label>
+      <p-dropdown
+        inputId="estado"
+        [options]="dropEstados"
+        formControlName="estado"
+      ></p-dropdown>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="p-grid p-jc-end p-pt-3 p-pb-2 p-px-2">
+      <p-button
+        icon="pi pi-save"
+        label="Guardar"
+        (click)="addItem()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-panel>

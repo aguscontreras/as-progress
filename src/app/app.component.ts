@@ -1,10 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DataService } from './services/data.service';
+import { Modulo, TipoItem } from './interfaces/interfaces';
+import { TreeNode } from 'primeng/api';
+import { ModuloModel } from './models/modulo.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.sass'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'autositeProgress';
+
+  panelAgregarItem: boolean;
+  panelDetalleItem: boolean;
+
+  public modulos$: Observable<Modulo[]>;
+  public modulosDB: Modulo[];
+  public treeNode: TreeNode[];
+
+  dropTipoItem: TipoItem[];
+  selectedTipoItem: number;
+
+  dropModulo: Modulo[];
+  selectedModulo: string;
+
+  nombre: string;
+  id: string;
+
+  constructor(private dataService: DataService) {
+    this.modulos$ = this.dataService.getModulos();
+
+    this.modulos$.subscribe({
+      next: (result) => {
+        this.modulosDB = result;
+        console.log(this.modulosDB);
+      },
+    });
+  }
+
+  ngOnInit(): void {}
+
+  setTreeNode(base: Modulo[]): void {}
+
+  guardar(): void {
+    console.log(this.selectedTipoItem);
+    const modulo = new ModuloModel(this.nombre);
+    this.dataService.abmModulo(modulo);
+  }
 }

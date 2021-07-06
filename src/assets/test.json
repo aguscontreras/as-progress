@@ -1,0 +1,78 @@
+{
+  "ventas": {
+    "nombre": "Ventas",
+    "id": "ventas",
+    "secciones": [
+      {
+        "nombre": "Unidades",
+        "id": "unidades",
+        "pantallas": [
+          {
+            "tipo": 1,
+            "nombre": "Consulta Unidades",
+            "id": "consultaUnidades",
+            "estado": 2,
+            "componente": "consultaUnidadesComponent",
+            "mxml": "unidades_main_consulta.mxml",
+            "ruta": "ventas/unidades/consulta-unidades",
+            "botones": [
+              {
+                "tipo": 2,
+                "nombre": "Exportar a Excel",
+                "id": "exportarAExcel",
+                "estado": 1
+              },
+              {
+                "tipo": 2,
+                "nombre": "Buscar",
+                "id": "buscar",
+                "estado": 2
+              },
+              {
+                "tipo": 2,
+                "nombre": "Clientes",
+                "id": "clientes",
+                "estado": 3
+              }
+            ],
+            "popups": [
+              {
+                "tipo": 3,
+                "nombre": "Preventas sin asignar",
+                "id": "popupPreventasSinAsignar",
+                "componente": "modalPreventasSinAsignarComponent",
+                "mxml": "popup-preventas-sin-asignar.mxml",
+                "estado": 3,
+                "grupos": {
+                    "ventas": true
+                }
+              },
+              {
+                "tipo": 3,
+                "nombre": "Cashflow",
+                "id": "popupCashflow",
+                "componente": "modalConsultaCashflowComponent",
+                "mxml": "popup-consulta-cashflow.mxml",
+                "estado": 0,
+                "grupos": {
+                    "contable": true
+                }
+              },
+              {
+                "tipo": 3,
+                "nombre": "Memos",
+                "id": "popupMemos",
+                "componente": "modalMemosComponent",
+                "mxml": "popup-memos.mxml",
+                "estado": 1,
+                "grupos": {
+                    "comun": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
