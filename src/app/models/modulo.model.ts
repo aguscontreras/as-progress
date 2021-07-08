@@ -1,17 +1,17 @@
-import { Seccion } from '../interfaces/interfaces';
-
 export class ModuloModel {
   nombre: string;
-  id?: string;
-  tipo?: number;
-  tipoDescripcion?: string;
-  secciones?: Seccion[];
-  children?: Seccion[];
+  id: string;
+  tipo = 1;
+  tipoDescripcion = 'modulo';
+  prefijo = 'mod';
+  secciones?: { [key: string]: true } = {};
 
   constructor(nombre: string) {
-    this.tipo = 1;
-    this.tipoDescripcion = 'modulo';
     this.nombre = nombre;
-    this.id = nombre.toLowerCase().replace(/\s/g, '');
+    this._id = this.nombre;
+  }
+
+  private set _id(nombre: string) {
+    this.id = `${this.prefijo}-${nombre.toLowerCase().replace(/\s/g, '')}`;
   }
 }
