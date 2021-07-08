@@ -29,24 +29,7 @@ export class AppComponent implements OnInit {
   nombre: string;
   id: string;
 
-  constructor(private dataService: DataService) {
-    this.modulos$ = this.dataService.getModulos();
-
-    this.modulos$.subscribe({
-      next: (result) => {
-        this.modulosDB = result;
-        console.log(this.modulosDB);
-      },
-    });
-  }
+  constructor(private dataService: DataService) {}
 
   ngOnInit(): void {}
-
-  setTreeNode(base: Modulo[]): void {}
-
-  guardar(): void {
-    console.log(this.selectedTipoItem);
-    const modulo = new ModuloModel(this.nombre);
-    this.dataService.abmModulo(modulo);
-  }
 }
