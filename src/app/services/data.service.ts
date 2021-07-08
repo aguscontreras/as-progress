@@ -1,47 +1,35 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { ModuloModel } from '../models/modulo.model';
 import { SeccionModel } from '../models/seccion.model';
-import {
-  Modulo,
-  Boton,
-  Seccion,
-  Pantalla,
-  Popup,
-} from '../interfaces/interfaces';
+import { Boton, Pantalla, Popup } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
-  private modulosDB: any;
+  constructor(private db: AngularFireDatabase) {}
 
-  constructor(private db: AngularFireDatabase) {
-    //  this.modulosDB = this.db.list('modulos').valueChanges();
-    //  console.log(this.modulosDB);
+  public getModulos(): Observable<ModuloModel[]> {
+    const modulosRef$ = this.db.list<ModuloModel>('modulos').valueChanges();
+    return modulosRef$;
   }
 
-  public getModulos(): Observable<Modulo[]> {
-    const values = this.db.list<Modulo>('modulos').valueChanges();
-    console.log(values);
-
-    const valuesObj = this.db.object<Modulo[]>('modulos').valueChanges();
-    console.log(valuesObj);
-
-    const treeNode = this.db.list('treeNode').valueChanges();
-
-    return treeNode;
+  public abmModulo(modulo: ModuloModel): Promise<void> {
+    const REF_MODULOS = this.db.object(`modulos/${modulo.id}`);
+    return REF_MODULOS.update(modulo);
   }
 
-  public abmModulo(modulo: ModuloModel): void {
-    const REF = this.db.object(`modulos/${modulo.id}`);
-    REF.update(modulo);
-  }
+  public abmSeccion(seccion: SeccionModel): Promise<void> {
+    const REF_SECCIONES = this.db.object(`secciones/${seccion.id}`);
+    const MODULO = Object.keys(seccion.modulo)[0];
 
-  public abmSeccion(seccion: SeccionModel, moduloId: string): void {
-    const REF = this.db.object(`modulos/${moduloId}/secciones/${seccion.id}`);
-    REF.update(seccion);
+    this.db
+      .object(`modulos/${MODULO}/secciones`)
+      .update({ [seccion.id]: true });
+
+    return REF_SECCIONES.update(seccion);
   }
 
   public abmPantalla(
