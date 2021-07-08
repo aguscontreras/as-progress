@@ -16,6 +16,13 @@
     <div class="p-field p-col-12 p-md-3 p-lg-2">
       <label for="nombre">Nombre *</label>
       <input type="text" id="nombre" pInputText formControlName="nombre" />
+      <small
+        *ngIf="
+          formAddItem.controls['nombre'].touched &&
+          formAddItem.controls['nombre'].invalid
+        "
+        >Este campo es obligatorio</small
+      >
     </div>
 
     <div class="p-field p-col-12 p-md-3 p-lg-2">
@@ -23,9 +30,16 @@
       <p-dropdown
         inputId="tipo"
         [options]="dropTipoItem"
-        placeholder="Seleccione..."
         formControlName="tipo"
+        placeholder="Seleccione..."
       ></p-dropdown>
+      <small
+        *ngIf="
+          formAddItem.controls['tipo'].touched &&
+          formAddItem.controls['tipo'].invalid
+        "
+        >Este campo es obligatorio</small
+      >
     </div>
 
     <div
@@ -132,6 +146,8 @@
       ></p-dropdown>
     </div>
   </form>
+
+  <p-messages [(value)]="messages"></p-messages>
 
   <ng-template pTemplate="footer">
     <div class="p-grid p-jc-end p-pt-3 p-pb-2 p-px-2">
