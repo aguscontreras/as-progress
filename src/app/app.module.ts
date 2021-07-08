@@ -16,6 +16,9 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+
 import { AddItemComponent } from './components/add-item/add-item.component';
 
 @NgModule({
@@ -34,6 +37,8 @@ import { AddItemComponent } from './components/add-item/add-item.component';
     ButtonModule,
     DropdownModule,
     InputTextModule,
+    MessagesModule,
+    MessageModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
