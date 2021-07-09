@@ -29,6 +29,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
   dropSecciones: SeccionModel[];
   dropPantallas: PantallaModel[];
 
+  private modulos: ModuloModel[];
+  private secciones: SeccionModel[];
+
   messages: Message[];
 
   private subscriptions: Subscription[] = [];
@@ -59,7 +62,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
     const SUBSCRIPTION = combineLatest([
       this._dataService.getModulos(),
-    ]).subscribe({ next: ([dropModulo]) => (this.dropModulo = dropModulo) });
+      this._dataService.getSecciones(),
+    ]).subscribe({
+      next: ([modulos, secciones]) => {
+        this.modulos = modulos;
+        this.secciones = secciones;
+
+        this.dropModulo = this.modulos;
+        this.dropSecciones = this.secciones;
+      },
+    });
 
     this.subscriptions.push(SUBSCRIPTION);
   }
@@ -77,10 +89,21 @@ export class AddItemComponent implements OnInit, OnDestroy {
     });
   }
 
+  public filterSeccionesByModulo(modulo: string): void {
+    console.log(modulo);
+    console.log(this.dropSecciones);
+
+    this.dropSecciones = this.secciones.filter(
+      (item) => item.modulo[modulo] === true
+    );
+  }
+
   addItem(): void {
     if (this.formAddItem.invalid) {
       return;
     }
+
+    console.log(this.formAddItem.value);
 
     switch (this.formAddItem.get('tipo').value) {
       case 1:
@@ -88,6 +111,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
         break;
       case 2:
         this.newSeccion();
+        break;
+      case 3:
+        this.newPantalla();
         break;
       default:
         break;
@@ -113,13 +139,28 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const { nombre, modulo } = this.formAddItem.getRawValue();
     const seccion = new SeccionModel(nombre);
     seccion._modulo = modulo;
-
-    console.log(seccion);
-
     this._dataService
       .abmSeccion(seccion)
       .then((_) => {
         this.showSuccessMessage('Sección añadida satisfactoriamente');
+        this.formAddItem.reset();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.showErrorMessage();
+      });
+  }
+
+  private newPantalla(): void {
+    const { nombre, modulo, seccion } = this.formAddItem.getRawValue();
+    const pantalla = new PantallaModel(nombre);
+    pantalla._modulo = modulo;
+    pantalla._seccion = seccion;
+
+    this._dataService
+      .abmPantalla(pantalla)
+      .then((_) => {
+        this.showSuccessMessage('Pantalla añadida satisfactoriamente');
         this.formAddItem.reset();
       })
       .catch((err) => {
