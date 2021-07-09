@@ -152,10 +152,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private newPantalla(): void {
-    const { nombre, modulo, seccion } = this.formAddItem.getRawValue();
+    const { nombre, modulo, seccion, estado, componente, mxml } =
+      this.formAddItem.getRawValue();
     const pantalla = new PantallaModel(nombre);
     pantalla._modulo = modulo;
     pantalla._seccion = seccion;
+    pantalla.estado = estado;
+    pantalla.componente = componente;
+    pantalla.mxml = mxml;
 
     this._dataService
       .abmPantalla(pantalla)
