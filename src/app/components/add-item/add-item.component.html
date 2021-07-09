@@ -85,9 +85,7 @@
       class="p-field p-col-12 p-md-3 p-lg-2"
       *ngIf="
         formAddItem.controls['tipo'].value &&
-        formAddItem.controls['tipo'].value !== 1 &&
-        formAddItem.controls['tipo'].value !== 2 &&
-        formAddItem.controls['tipo'].value !== 3
+        formAddItem.controls['tipo'].value === 5
       "
     >
       <label for="pantalla">Pantalla</label>
@@ -99,6 +97,24 @@
         formControlName="pantalla"
         placeholder="Seleccione..."
       ></p-dropdown>
+    </div>
+
+    <div
+      class="p-field p-col-12 p-md-3 p-lg-2"
+      *ngIf="
+        formAddItem.controls['tipo'].value &&
+        formAddItem.controls['tipo'].value === 4
+      "
+    >
+      <label for="pantalla">Pantalla/s</label>
+
+      <p-multiSelect
+        [options]="multiSelectPantalla"
+        [(ngModel)]="selectedPantallas"
+        [ngModelOptions]="{ standalone: true }"
+        optionLabel="nombre"
+        defaultLabel="Seleccione pantallas..."
+      ></p-multiSelect>
     </div>
 
     <div
@@ -150,6 +166,19 @@
   </form>
 
   <p-messages [(value)]="messages"></p-messages>
+
+  <div *ngIf="selectedPantallas && selectedPantallas.length">
+    <h4>Pantallas seleccionadas:</h4>
+    <p-chip
+      *ngFor="let pantalla of selectedPantallas; index as i"
+      [label]="pantalla.nombre"
+      [removable]="true"
+      class="p-mr-2"
+      (onRemove)="removeSelectedPantalla(i)"
+    ></p-chip>
+  </div>
+
+  <pre> {{ selectedPantallas | json }} </pre>
 
   <ng-template pTemplate="footer">
     <div class="p-grid p-jc-end p-pt-3 p-pb-2 p-px-2">

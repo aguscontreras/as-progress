@@ -18,6 +18,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ChipModule } from 'primeng/chip';
 
 import { AddItemComponent } from './components/add-item/add-item.component';
 
@@ -39,6 +41,8 @@ import { AddItemComponent } from './components/add-item/add-item.component';
     InputTextModule,
     MessagesModule,
     MessageModule,
+    MultiSelectModule,
+    ChipModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

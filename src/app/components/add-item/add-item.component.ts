@@ -30,6 +30,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   dropModulo: ModuloModel[];
   dropSecciones: SeccionModel[];
   dropPantallas: PantallaModel[];
+  multiSelectPantalla: any[];
+  selectedPantallas: any[];
 
   private modulos: ModuloModel[];
   private secciones: SeccionModel[];
@@ -49,11 +51,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.dropTipoItem = [
-      { value: 1, label: 'Módulo' },
-      { value: 2, label: 'Sección' },
-      { value: 3, label: 'Pantalla' },
-      { value: 4, label: 'Popup' },
-      { value: 5, label: 'Botón' },
+      { label: 'Módulo', value: 1 },
+      { label: 'Sección', value: 2 },
+      { label: 'Pantalla', value: 3 },
+      { label: 'Popup', value: 4 },
+      { label: 'Botón', value: 5 },
     ];
 
     this.dropEstados = [
@@ -76,6 +78,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
         this.dropModulo = this.modulos;
         this.dropSecciones = this.secciones;
         this.dropPantallas = this.pantallas;
+        this.multiSelectPantalla = this.pantallas.map((pantalla) => {
+          const { nombre, id } = pantalla;
+          return { nombre, id };
+        });
       },
     });
 
@@ -96,15 +102,29 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   public filterSeccionesByModulo(modulo: string): void {
+    if (modulo === 'mod-comun') {
+      this.dropSecciones = this.secciones;
+    }
+
     this.dropSecciones = this.secciones.filter(
-      (item) => item.modulo[modulo] === true
+      (seccion) => seccion.modulo[modulo] === true
     );
   }
 
   public filterPantallasBySeccion(seccion: string): void {
-    this.dropPantallas = this.pantallas.filter(
-      (item) => item.seccion[seccion] === true
+    const filteredPantallas = this.pantallas.filter(
+      (pantalla) => pantalla.seccion[seccion] === true
     );
+
+    this.dropPantallas = filteredPantallas;
+    this.multiSelectPantalla = filteredPantallas.map((item) => {
+      const { nombre, id } = item;
+      return { nombre, id };
+    });
+  }
+
+  removeSelectedPantalla(index: number): void {
+    this.selectedPantallas.splice(index, 1);
   }
 
   addItem(): void {
@@ -209,11 +229,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   private newPopup(): void {
-    return;
-
-    //  TODO: Form para Pupup
-
-    const { nombre, modulo, seccion, estado, componente, mxml, pantalla } =
+    const { nombre, modulo, seccion, estado, componente, mxml } =
       this.formAddItem.getRawValue();
 
     const popup = new PopupModel(nombre);
@@ -222,6 +238,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
     popup.estado = estado;
     popup.componente = componente;
     popup.mxml = mxml;
+
+    if (this.selectedPantallas && this.selectedPantallas.length) {
+      for (const pantalla of this.selectedPantallas) {
+        popup.pantallas[pantalla.id] = true;
+      }
+    }
+
+    this._dataService
+      .abmPopup(popup)
+      .then((_) => {
+        this.showSuccessMessage('Popup añadido satisfactoriamente');
+        this.formAddItem.reset();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.showErrorMessage();
+      });
   }
 
   showSuccessMessage(detail: string): void {
