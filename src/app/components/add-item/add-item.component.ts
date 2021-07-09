@@ -12,6 +12,8 @@ import { SeccionModel } from '../../models/seccion.model';
 import { PantallaModel } from '../../models/pantalla.model';
 import { DataService } from '../../services/data.service';
 import { combineLatest, Subscription } from 'rxjs';
+import { PopupModel } from '../../models/popup.model';
+import { BotonModel } from '../../models/boton.model';
 
 @Component({
   selector: 'app-add-item',
@@ -31,6 +33,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   private modulos: ModuloModel[];
   private secciones: SeccionModel[];
+  private pantallas: PantallaModel[];
 
   messages: Message[];
 
@@ -63,13 +66,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const SUBSCRIPTION = combineLatest([
       this._dataService.getModulos(),
       this._dataService.getSecciones(),
+      this._dataService.getPantallas(),
     ]).subscribe({
-      next: ([modulos, secciones]) => {
+      next: ([modulos, secciones, pantallas]) => {
         this.modulos = modulos;
         this.secciones = secciones;
+        this.pantallas = pantallas;
 
         this.dropModulo = this.modulos;
         this.dropSecciones = this.secciones;
+        this.dropPantallas = this.pantallas;
       },
     });
 
@@ -90,11 +96,14 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   public filterSeccionesByModulo(modulo: string): void {
-    console.log(modulo);
-    console.log(this.dropSecciones);
-
     this.dropSecciones = this.secciones.filter(
       (item) => item.modulo[modulo] === true
+    );
+  }
+
+  public filterPantallasBySeccion(seccion: string): void {
+    this.dropPantallas = this.pantallas.filter(
+      (item) => item.seccion[seccion] === true
     );
   }
 
@@ -115,7 +124,11 @@ export class AddItemComponent implements OnInit, OnDestroy {
       case 3:
         this.newPantalla();
         break;
+      case 4:
+        this.newPopup();
+        break;
       default:
+        this.newBoton();
         break;
     }
   }
@@ -171,6 +184,44 @@ export class AddItemComponent implements OnInit, OnDestroy {
         console.error(err);
         this.showErrorMessage();
       });
+  }
+
+  private newBoton(): void {
+    const { nombre, modulo, seccion, pantalla, estado } =
+      this.formAddItem.getRawValue();
+
+    const boton = new BotonModel(nombre);
+    boton._modulo = modulo;
+    boton._seccion = seccion;
+    boton._pantalla = pantalla;
+    boton.estado = estado;
+
+    this._dataService
+      .abmBoton(boton)
+      .then((_) => {
+        this.showSuccessMessage('Botón añadido satisfactoriamente');
+        this.formAddItem.reset();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.showErrorMessage();
+      });
+  }
+
+  private newPopup(): void {
+    return;
+
+    //  TODO: Form para Pupup
+
+    const { nombre, modulo, seccion, estado, componente, mxml, pantalla } =
+      this.formAddItem.getRawValue();
+
+    const popup = new PopupModel(nombre);
+    popup._modulo = modulo;
+    popup._seccion = seccion;
+    popup.estado = estado;
+    popup.componente = componente;
+    popup.mxml = mxml;
   }
 
   showSuccessMessage(detail: string): void {

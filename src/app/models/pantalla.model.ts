@@ -12,8 +12,8 @@ export class PantallaModel {
   ruta?: string;
   modulo?: { [key: string]: boolean } = {};
   seccion?: { [key: string]: boolean } = {};
-  // botones?: { [key: string]: boolean } = {};
-  // popups?: { [key: string]: boolean } = {};
+  botones?: { [key: string]: boolean } = {};
+  popups?: { [key: string]: boolean } = {};
 
   constructor(nombre: string) {
     this.nombre = nombre;
@@ -38,13 +38,13 @@ export class PantallaModel {
 
   public set _botones(botonId: string) {
     if (botonId && botonId.length) {
-      this.seccion[botonId] = true;
+      this.botones[botonId] = true;
     }
   }
 
   public set _popups(pupupId: string) {
     if (pupupId && pupupId.length) {
-      this.seccion[pupupId] = true;
+      this.popups[pupupId] = true;
     }
   }
 }

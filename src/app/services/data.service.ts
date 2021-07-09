@@ -3,8 +3,9 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable } from 'rxjs';
 import { ModuloModel } from '../models/modulo.model';
 import { SeccionModel } from '../models/seccion.model';
-import { Boton, Pantalla, Popup } from '../interfaces/interfaces';
 import { PantallaModel } from '../models/pantalla.model';
+import { PopupModel } from '../models/popup.model';
+import { BotonModel } from '../models/boton.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,13 @@ export class DataService {
       .list<SeccionModel>('secciones')
       .valueChanges();
     return seccionesRef$;
+  }
+
+  public getPantallas(): Observable<PantallaModel[]> {
+    const pantallasRef = this.db
+      .list<PantallaModel>('pantallas')
+      .valueChanges();
+    return pantallasRef;
   }
 
   public abmModulo(modulo: ModuloModel): Promise<void> {
@@ -51,13 +59,28 @@ export class DataService {
     return REF_PANTALLAS.update(pantalla);
   }
 
-  public abmBoton(boton: Boton, url: string): void {
-    const REF = this.db.object(url);
-    REF.update(boton);
+  public abmPopup(popup: PopupModel): void {
+    const REF_POPUPS = this.db.object(`popups/${popup.id}`);
+    const SECCION_ID = Object.keys(popup.seccion)[0];
+    const PANTALLA_ID = Object.keys(popup.pantallas)[0];
   }
 
-  public abmPopup(popup: Popup, url: string): void {
-    const REF = this.db.object(url);
-    REF.update(popup);
+  public abmBoton(boton: BotonModel): Promise<void> {
+    console.log(boton);
+
+    const SECCION_ID = Object.keys(boton._seccion)[0];
+    const MODULO_ID = Object.keys(boton._modulo)[0];
+    const PANTALLA_ID = Object.keys(boton._pantalla)[0];
+
+    const REF_BOTONES = this.db.object(`botones/${boton._id}`);
+    const REF_PANTALLAS = this.db.object(`pantallas/${PANTALLA_ID}/botones`);
+    const REF_SECCIONES = this.db.object(`secciones/${SECCION_ID}/botones`);
+    const REF_MODULOS = this.db.object(`modulos/${MODULO_ID}/botones`);
+
+    REF_SECCIONES.update({ [boton._id]: true });
+    REF_MODULOS.update({ [boton._id]: true });
+    REF_PANTALLAS.update({ [boton._id]: true });
+
+    return REF_BOTONES.update(boton);
   }
 }
